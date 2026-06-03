@@ -7,6 +7,9 @@ val BrandPurple      = Color(0xFF7051E3)
 val BrandPurpleLight = Color(0xFFEEEDFE)
 val BrandPurpleMid   = Color(0xFFAFA9EC)
 
+// ── Navegación inferior ───────────────────────────────────────────────────────
+val NavBarBg         = Color(0xFFFFFFFF)   // blanco puro para el fondo de la barra
+
 // ── Fondos del gradiente de pantalla ─────────────────────────────────────────
 val BgGradientTop    = Color(0xFF7B5EA7)
 val BgGradientMid    = Color(0xFF6B47A8)
