@@ -1,0 +1,456 @@
+package com.example.signtranslate.ui.screens
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.signtranslate.ui.theme.*
+
+// Colores específicos de esta pantalla
+private val BgPurpleTop    = Color(0xFF7B5EA7)
+private val BgPurpleBottom = Color(0xFF4C2D99)
+private val CardLavender   = Color(0xCCF0EDF8)   // lavanda semitransparente (CC = 80% opaco)
+private val FieldBg        = Color(0xFFFFFFFF)   // campos internos blancos
+private val FieldBorder    = Color(0xFFDDDAF0)   // borde suave lavanda
+private val LabelColor     = Color(0xFF6B6B8A)   // label flotante gris
+
+@Composable
+fun LoginScreen(
+    onLoginSuccess: () -> Unit = {}
+) {
+    var isLoginMode     by remember { mutableStateOf(true) }
+    var name            by remember { mutableStateOf("") }
+    var email           by remember { mutableStateOf("") }
+    var password        by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+    var confirmVisible  by remember { mutableStateOf(false) }
+    var rememberMe      by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    listOf(BgPurpleTop, BgPurpleBottom)
+                )
+            )
+    ) {
+        // ── Formas orgánicas blancas del fondo (imagen 2) ────────────────────
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val w = size.width
+            val h = size.height
+
+            // Blob grande arriba-izquierda
+            drawOval(
+                color  = Color.White.copy(alpha = 0.13f),
+                topLeft = Offset(-w * 0.45f, -h * 0.05f),
+                size   = Size(w * 1.0f, h * 0.45f)
+            )
+            // Blob grande abajo-derecha
+            drawOval(
+                color   = Color(0xFF5B2D9E).copy(alpha = 0.60f),
+                topLeft = Offset(w * 0.30f, h * 0.68f),
+                size    = Size(w * 1.0f, h * 0.45f)
+            )
+            // Pequeño destello esquina inferior derecha
+            drawCircle(
+                color  = Color.White.copy(alpha = 0.08f),
+                radius = w * 0.12f,
+                center = Offset(w * 0.92f, h * 0.94f)
+            )
+        }
+
+        Column(
+            modifier            = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // ── Card lavanda (igual a imagen 2) ──────────────────────────────
+            Card(
+                modifier = Modifier
+                    .padding(horizontal = 22.dp)
+                    .padding(top = 80.dp, bottom = 40.dp)
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.CenterHorizontally),
+                shape     = RoundedCornerShape(28.dp),
+                colors    = CardDefaults.cardColors(containerColor = CardLavender),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            ) {
+                Column(
+                    modifier            = Modifier.padding(horizontal = 26.dp, vertical = 30.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    // ── Logo doble flecha ─────────────────────────────────────
+                    Canvas(modifier = Modifier.size(54.dp)) {
+                        val w = size.width
+                        val h = size.height
+                        val stroke = Stroke(
+                            width = w * 0.085f,
+                            cap   = StrokeCap.Round,
+                            join  = StrokeJoin.Round
+                        )
+                        // Flecha izquierda-arriba-derecha
+                        drawPath(
+                            Path().apply {
+                                moveTo(w * 0.15f, h * 0.50f)
+                                lineTo(w * 0.50f, h * 0.15f)
+                                lineTo(w * 0.85f, h * 0.50f)
+                            },
+                            color = BrandPurple,
+                            style = stroke
+                        )
+                        // Flecha derecha-abajo-izquierda
+                        drawPath(
+                            Path().apply {
+                                moveTo(w * 0.85f, h * 0.50f)
+                                lineTo(w * 0.50f, h * 0.85f)
+                                lineTo(w * 0.15f, h * 0.50f)
+                            },
+                            color = BrandPurple,
+                            style = stroke
+                        )
+                    }
+
+                    Spacer(Modifier.height(10.dp))
+
+                    // ── Brand ─────────────────────────────────────────────────
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("Sign",      fontSize = 17.sp, fontWeight = FontWeight.Bold,   color = TextDark)
+                        Text("Translate", fontSize = 17.sp, fontWeight = FontWeight.Bold,   color = BrandPurple)
+                    }
+
+                    Spacer(Modifier.height(22.dp))
+
+                    // ── Título grande ─────────────────────────────────────────
+                    Text(
+                        text       = if (isLoginMode) "Iniciar sesión" else "Crear cuenta",
+                        fontSize   = 30.sp,
+                        fontWeight = FontWeight.Bold,
+                        color      = TextDark,
+                        textAlign  = TextAlign.Center
+                    )
+                    Spacer(Modifier.height(5.dp))
+                    Text(
+                        text      = if (isLoginMode)
+                            "Accede a tu cuenta para continuar"
+                        else
+                            "Crea tu cuenta gratis",
+                        fontSize  = 13.sp,
+                        color     = TextBody,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(Modifier.height(26.dp))
+
+                    // ── Tabs ──────────────────────────────────────────────────
+                    Row(
+                        modifier              = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TabButton("Iniciar sesión", isLoginMode)  { isLoginMode = true  }
+                        Spacer(Modifier.width(8.dp))
+                        TabButton("Registrarse",    !isLoginMode) { isLoginMode = false }
+                    }
+
+                    Spacer(Modifier.height(22.dp))
+
+                    // ── Campos ────────────────────────────────────────────────
+                    if (!isLoginMode) {
+                        AuthTextField(
+                            value         = name,
+                            onValueChange = { name = it },
+                            label         = "Nombre completo",
+                            icon          = Icons.Default.Person
+                        )
+                        Spacer(Modifier.height(14.dp))
+                    }
+
+                    AuthTextField(
+                        value         = email,
+                        onValueChange = { email = it },
+                        label         = "Correo electrónico",
+                        placeholder   = "ejemplo@correo.com",
+                        icon          = Icons.Default.Email
+                    )
+                    Spacer(Modifier.height(14.dp))
+
+                    AuthTextField(
+                        value            = password,
+                        onValueChange    = { password = it },
+                        label            = "Contraseña",
+                        icon             = Icons.Default.Lock,
+                        isPassword       = true,
+                        passwordVisible  = passwordVisible,
+                        onTogglePassword = { passwordVisible = !passwordVisible }
+                    )
+
+                    if (!isLoginMode) {
+                        Spacer(Modifier.height(14.dp))
+                        AuthTextField(
+                            value            = confirmPassword,
+                            onValueChange    = { confirmPassword = it },
+                            label            = "Confirmar contraseña",
+                            icon             = Icons.Default.Lock,
+                            isPassword       = true,
+                            passwordVisible  = confirmVisible,
+                            onTogglePassword = { confirmVisible = !confirmVisible }
+                        )
+                    }
+
+                    // ── Recordarme + Olvidaste ────────────────────────────────
+                    if (isLoginMode) {
+                        Spacer(Modifier.height(10.dp))
+                        Row(
+                            modifier              = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment     = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier          = Modifier.offset(x = (-12).dp)
+                            ) {
+                                Checkbox(
+                                    checked         = rememberMe,
+                                    onCheckedChange = { rememberMe = it },
+                                    colors          = CheckboxDefaults.colors(
+                                        checkedColor   = BrandPurple,
+                                        uncheckedColor = TextBody
+                                    )
+                                )
+                                Text("Recordarme", fontSize = 13.sp, color = TextDark, fontWeight = FontWeight.Medium)
+                            }
+                            TextButton(onClick = {}, contentPadding = PaddingValues(0.dp)) {
+                                Text(
+                                    "¿Olvidaste tu contraseña?",
+                                    color      = BrandPurple,
+                                    fontSize   = 13.sp,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(22.dp))
+
+                    // ── Botón principal pill ───────────────────────────────────
+                    Button(
+                        onClick   = { onLoginSuccess() },
+                        modifier  = Modifier.fillMaxWidth().height(54.dp),
+                        shape     = RoundedCornerShape(27.dp),
+                        colors    = ButtonDefaults.buttonColors(containerColor = BrandPurple),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 6.dp,
+                            pressedElevation = 10.dp
+                        )
+                    ) {
+                        Text(
+                            text       = if (isLoginMode) "Iniciar sesión" else "Crear cuenta",
+                            fontSize   = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color      = Color.White
+                        )
+                    }
+
+                    // ── Divisor + Google ──────────────────────────────────────
+                    if (isLoginMode) {
+                        Spacer(Modifier.height(22.dp))
+                        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            HorizontalDivider(modifier = Modifier.weight(1f), color = FieldBorder)
+                            Text("  o continúa con  ", color = TextBody, fontSize = 13.sp)
+                            HorizontalDivider(modifier = Modifier.weight(1f), color = FieldBorder)
+                        }
+                        Spacer(Modifier.height(14.dp))
+
+                        // Botón Google con logo multicolor real
+                        OutlinedButton(
+                            onClick  = {},
+                            modifier = Modifier.fillMaxWidth().height(54.dp),
+                            shape    = RoundedCornerShape(14.dp),
+                            border   = BorderStroke(1.dp, FieldBorder),
+                            colors   = ButtonDefaults.outlinedButtonColors(containerColor = Color.White)
+                        ) {
+                            Row(
+                                verticalAlignment     = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                // Logo G multicolor con Canvas
+                                Canvas(modifier = Modifier.size(22.dp)) {
+                                    val cx = size.width / 2f
+                                    val cy = size.height / 2f
+                                    val r  = size.width / 2f
+                                    val sw = size.width * 0.22f
+                                    val s  = Stroke(width = sw, cap = StrokeCap.Round)
+
+                                    // Arco rojo (superior)
+                                    drawArc(color = Color(0xFFEA4335), startAngle = -225f, sweepAngle = 112f,
+                                        useCenter = false, topLeft = Offset(cx - r + sw/2, cy - r + sw/2),
+                                        size = Size(size.width - sw, size.height - sw), style = s)
+                                    // Arco azul (derecha)
+                                    drawArc(color = Color(0xFF4285F4), startAngle = -113f, sweepAngle = 113f,
+                                        useCenter = false, topLeft = Offset(cx - r + sw/2, cy - r + sw/2),
+                                        size = Size(size.width - sw, size.height - sw), style = s)
+                                    // Arco amarillo (inferior)
+                                    drawArc(color = Color(0xFFFBBC05), startAngle = 0f, sweepAngle = 112f,
+                                        useCenter = false, topLeft = Offset(cx - r + sw/2, cy - r + sw/2),
+                                        size = Size(size.width - sw, size.height - sw), style = s)
+                                    // Arco verde (izquierda)
+                                    drawArc(color = Color(0xFF34A853), startAngle = 112f, sweepAngle = 113f,
+                                        useCenter = false, topLeft = Offset(cx - r + sw/2, cy - r + sw/2),
+                                        size = Size(size.width - sw, size.height - sw), style = s)
+                                }
+                                Spacer(Modifier.width(10.dp))
+                                Text(
+                                    "Continuar con Google",
+                                    color      = TextDark,
+                                    fontSize   = 15.sp,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(22.dp))
+
+                    // ── Pie ───────────────────────────────────────────────────
+                    Row(
+                        verticalAlignment     = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text     = if (isLoginMode) "¿No tienes cuenta? " else "¿Ya tienes cuenta? ",
+                            color    = TextBody,
+                            fontSize = 14.sp
+                        )
+                        TextButton(onClick = { isLoginMode = !isLoginMode }, contentPadding = PaddingValues(0.dp)) {
+                            Text(
+                                text       = if (isLoginMode) "Regístrate" else "Inicia sesión",
+                                color      = BrandPurple,
+                                fontSize   = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(Modifier.height(20.dp))
+        }
+    }
+}
+
+// ─── TabButton ────────────────────────────────────────────────────────────────
+@Composable
+private fun TabButton(text: String, selected: Boolean, onClick: () -> Unit) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        TextButton(
+            onClick        = onClick,
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
+        ) {
+            Text(
+                text       = text,
+                fontSize   = 15.sp,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                color      = if (selected) BrandPurple else TextBody
+            )
+        }
+        if (selected) {
+            Box(
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(2.dp)
+                    .background(BrandPurple, RoundedCornerShape(1.dp))
+            )
+        }
+    }
+}
+
+// ─── AuthTextField ─────────────────────────────────────────────────────────────
+@Composable
+private fun AuthTextField(
+    value:            String,
+    onValueChange:    (String) -> Unit,
+    label:            String,
+    placeholder:      String = "",
+    icon:             androidx.compose.ui.graphics.vector.ImageVector,
+    isPassword:       Boolean = false,
+    passwordVisible:  Boolean = false,
+    onTogglePassword: () -> Unit = {}
+) {
+    OutlinedTextField(
+        value         = value,
+        onValueChange = onValueChange,
+        modifier      = Modifier.fillMaxWidth(),
+        label         = { Text(label) },
+        placeholder   = {
+            if (placeholder.isNotEmpty()) Text(placeholder, color = TextHint)
+        },
+        leadingIcon = {
+            Icon(
+                imageVector        = icon,
+                contentDescription = null,
+                tint               = BrandPurple.copy(alpha = 0.65f)
+            )
+        },
+        trailingIcon = if (isPassword) ({
+            IconButton(onClick = onTogglePassword) {
+                Icon(
+                    imageVector        = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                    contentDescription = if (passwordVisible) "Ocultar" else "Mostrar",
+                    tint               = TextBody
+                )
+            }
+        }) else null,
+        visualTransformation = if (isPassword && !passwordVisible)
+            PasswordVisualTransformation() else VisualTransformation.None,
+        shape      = RoundedCornerShape(14.dp),
+        singleLine = true,
+        colors     = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor    = Color.White.copy(alpha = 0.85f),
+            unfocusedContainerColor  = Color.White.copy(alpha = 0.75f),
+            focusedBorderColor       = BrandPurple,
+            unfocusedBorderColor     = Color(0xFFDDDAF0),
+            focusedLabelColor        = BrandPurple,
+            unfocusedLabelColor      = Color(0xFF6B6B8A),
+            cursorColor              = BrandPurple
+        )
+    )
+}
+
+// ─── Preview ───────────────────────────────────────────────────────────────────
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun LoginScreenPreview() {
+    LoginScreen()
+}
