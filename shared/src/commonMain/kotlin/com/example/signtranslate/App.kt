@@ -1,12 +1,17 @@
 package com.example.signtranslate
 
-import androidx.compose.runtime.Composable
-import com.example.signtranslate.ui.navigation.AppNavigation
-import com.example.signtranslate.ui.theme.SignTranslateTheme
+import androidx.compose.runtime.*
+import com.example.signtranslate.ui.screens.LoginView
+
+enum class Screen { LOGIN }
 
 @Composable
 fun App() {
-    SignTranslateTheme {
-        AppNavigation()
+    var pantalla by remember { mutableStateOf(Screen.LOGIN) }
+
+    when (pantalla) {
+        Screen.LOGIN -> LoginView(
+            onLoginExitoso = { /* aquí navegarás al Dashboard después */ }
+        )
     }
 }
