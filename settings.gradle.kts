@@ -1,4 +1,4 @@
-rootProject.name = "SignTranslate1"
+rootProject.name = "SignTranslate"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
