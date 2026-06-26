@@ -1,95 +1,93 @@
 package com.example.signtranslate.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.NotificationsNone
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.outlined.CameraAlt
+import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Mic
+import androidx.compose.material.icons.outlined.PersonOutline
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.signtranslate.ui.theme.BrandPurple
-import com.example.signtranslate.ui.theme.BrandPurpleLight
-import com.example.signtranslate.ui.theme.CardBg
-import com.example.signtranslate.ui.theme.NavBarBg
-import com.example.signtranslate.ui.theme.TextBody
-import com.example.signtranslate.ui.theme.TextDark
+import org.jetbrains.compose.resources.painterResource
+import signtranslate.shared.generated.resources.Res
+import signtranslate.shared.generated.resources.avatar
+import signtranslate.shared.generated.resources.logo
 
-// ── Colores locales sin equivalente en Color.kt ───────────────────────────────
+// NOTA: se eliminaron los imports fijos de BrandPurple / BrandPurpleLight /
+// CardBg / NavBarBg / TextBody / TextDark como FONDOS y TEXTOS de la pantalla.
+// Esos tokens siguen existiendo en Color.kt y se usan en LightColors/DarkColors
+// (Theme.kt), pero la pantalla ahora lee MaterialTheme.colorScheme para que
+// el fondo, las tarjetas y los textos cambien solos al activar Modo oscuro.
+//
+// Los acentos de marca (BrandPurple) se conservan SOLO para icon tint, ya que
+// son un acento de marca, no una superficie — pero se obtienen de
+// MaterialTheme.colorScheme.primary para que también respondan al tema si
+// algún día cambia.
+
+// Acentos secundarios de las opciones del menú (no cambian con el tema,
+// son colores semánticos de cada acción — se atenúan automáticamente
+// en fondo oscuro porque sus "Light" pasan a ser superficies oscuras).
 private val GreenAccent = Color(0xFF4CAF50)
-private val GreenLight  = Color(0xFFE8F5E9)
 private val TealAccent  = Color(0xFF26C6DA)
-private val TealLight   = Color(0xFFE0F7FA)
 
-// ── Modelo de datos para tarjetas ─────────────────────────────────────────────
 data class MenuOption(
-    val icon: String,
-    val title: String,
-    val subtitle: String,
-    val iconBg: Color,
+    val icon:      ImageVector,
+    val title:     String,
+    val subtitle:  String,
     val iconColor: Color,
-    val route: String,
+    val route:     String,
 )
 
 @Composable
 fun InicioScreen(
-    innerPadding: PaddingValues = PaddingValues(),
-    onNavigateToTranslator: () -> Unit = {},
-    onNavigateToAvatar: () -> Unit = {},
-    onNavigateToTextToSign: () -> Unit = {},
-    onNavigateToSettings: () -> Unit = {},
-    onNotificationsClick: () -> Unit = {},
+    innerPadding:           PaddingValues = PaddingValues(),
+    onNavigateToTranslator: () -> Unit    = {},
+    onNavigateToAvatar:     () -> Unit    = {},
+    onNavigateToTextToSign: () -> Unit    = {},
+    onNavigateToSettings:   () -> Unit    = {},
+    onRegisterClick:        () -> Unit    = {},
 ) {
+    val primary = MaterialTheme.colorScheme.primary
+
     val menuOptions = listOf(
         MenuOption(
-            icon      = "👋",
+            icon      = Icons.Outlined.CameraAlt,
             title     = "Traducir señas a texto",
-            subtitle  = "Usa la cámara para traducir\nseñas en tiempo real.",
-            iconBg    = BrandPurpleLight,
-            iconColor = BrandPurple,
+            subtitle  = "Usa la cámara para traducir señas en tiempo real.",
+            iconColor = primary,
             route     = "translator",
         ),
         MenuOption(
-            icon      = "🎤",
+            icon      = Icons.Outlined.Mic,
             title     = "Traducir voz a LSM",
-            subtitle  = "Habla y el avatar lo traducirá\na Lengua de Señas Mexicana.",
-            iconBg    = GreenLight,
+            subtitle  = "Habla y el avatar lo traducirá a Lengua de Señas Mexicana.",
             iconColor = GreenAccent,
             route     = "avatar",
         ),
         MenuOption(
-            icon      = "📝",
+            icon      = Icons.Outlined.Edit,
             title     = "Traducir texto a LSM",
-            subtitle  = "Escribe un texto y el avatar\nlo traducirá a LSM.",
-            iconBg    = TealLight,
+            subtitle  = "Escribe un texto y el avatar lo traducirá a LSM.",
             iconColor = TealAccent,
             route     = "text_to_sign",
         ),
@@ -99,26 +97,26 @@ fun InicioScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
-            .background(CardBg)
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState())
     ) {
-        HeroSection(onNotificationsClick = onNotificationsClick)
+        HeroSection(onRegisterClick = onRegisterClick)
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 20.dp)
-                .padding(top = 24.dp, bottom = 32.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+                .padding(top = 12.dp, bottom = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
                 text       = "¿Qué deseas hacer hoy?",
                 fontSize   = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color      = TextDark,
+                color      = MaterialTheme.colorScheme.onBackground,
                 modifier   = Modifier.padding(bottom = 4.dp)
             )
-
             menuOptions.forEach { option ->
                 MenuCard(
                     option  = option,
@@ -139,130 +137,179 @@ fun InicioScreen(
 // HERO SECTION
 // ─────────────────────────────────────────────────────────────────────────────
 @Composable
-private fun HeroSection(onNotificationsClick: () -> Unit) {
-    Box(
+private fun HeroSection(onRegisterClick: () -> Unit) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(BrandPurpleLight, CardBg)
-                )
-            )
+            .background(MaterialTheme.colorScheme.background)
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-
-            // Top bar
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .padding(top = 52.dp, bottom = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment     = Alignment.CenterVertically,
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier         = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(BrandPurple),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(text = "👋", fontSize = 20.sp)
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = buildAnnotatedString {
-                                withStyle(SpanStyle(color = TextDark, fontWeight = FontWeight.Bold)) {
-                                    append("Sign")
-                                }
-                                withStyle(SpanStyle(color = BrandPurple, fontWeight = FontWeight.Bold)) {
-                                    append("Translate")
-                                }
-                            },
-                            fontSize = 20.sp,
-                        )
-                        Text(
-                            text     = "Lengua de Señas Mexicana",
-                            fontSize = 11.sp,
-                            color    = TextBody,
-                        )
-                    }
-                }
-
-                Box(
-                    modifier         = Modifier
-                        .size(42.dp)
-                        .clip(CircleShape)
-                        .background(NavBarBg)
-                        .clickable { onNotificationsClick() },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector        = Icons.Outlined.NotificationsNone,
-                        contentDescription = "Notificaciones",
-                        tint               = BrandPurple,
-                        modifier           = Modifier.size(24.dp),
-                    )
-                }
-            }
-
-            // Bienvenida + Avatar
+        // ── Top bar: tarjeta redondeada ────────────────────────────────────
+        Card(
+            modifier  = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(top = 48.dp, bottom = 16.dp),
+            shape     = RoundedCornerShape(24.dp),
+            colors    = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        ) {
             Row(
                 modifier              = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .padding(bottom = 24.dp),
-                verticalAlignment     = Alignment.Bottom,
+                    .padding(horizontal = 20.dp, vertical = 14.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment     = Alignment.CenterVertically,
             ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text       = "¡Bienvenido! 👋",
-                        fontSize   = 26.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color      = TextDark,
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text       = "Comunicación sin barreras\ncon Lengua de Señas Mexicana.",
-                        fontSize   = 14.sp,
-                        color      = TextBody,
-                        lineHeight = 20.sp,
+                Image(
+                    painter            = painterResource(Res.drawable.logo),
+                    contentDescription = "SignTranslate Logo",
+                    modifier           = Modifier
+                        .weight(1f)
+                        .height(80.dp),
+                    contentScale       = ContentScale.Fit,
+                    alignment          = Alignment.CenterStart,
+                )
+
+                Box(
+                    modifier         = Modifier
+                        .size(52.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .clickable { onRegisterClick() },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector        = Icons.Outlined.PersonOutline,
+                        contentDescription = "Registrarse / Perfil",
+                        tint               = MaterialTheme.colorScheme.primary,
+                        modifier           = Modifier.size(28.dp),
                     )
                 }
-                AvatarPlaceholder()
             }
+        }
+
+        // ── Hero: tarjeta bienvenida + avatar ─────────────────────────────
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp),
+        ) {
+            // Círculo difuso detrás del avatar
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 10.dp)
+                    .size(240.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.08f))
+            )
+
+            // Tarjeta bienvenida con piquito apuntando a la derecha (hacia el avatar)
+            SpeechBubbleCard(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 20.dp)
+                    .width(200.dp)
+            )
+
+            // Avatar — sobresale del Box hacia arriba
+            Image(
+                painter            = painterResource(Res.drawable.avatar),
+                contentDescription = "Avatar LSM",
+                modifier           = Modifier
+                    .align(Alignment.BottomEnd)
+                    .width(230.dp)
+                    .height(360.dp)
+                    .offset(x = 4.dp, y = (-30).dp),
+                contentScale       = ContentScale.Fit,
+            )
         }
     }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// AVATAR PLACEHOLDER
+// SPEECH BUBBLE CARD — tarjeta con piquito apuntando al avatar (derecha)
 // ─────────────────────────────────────────────────────────────────────────────
 @Composable
-private fun AvatarPlaceholder() {
-    Box(
-        modifier         = Modifier.size(width = 130.dp, height = 160.dp),
-        contentAlignment = Alignment.Center,
-    ) {
+private fun SpeechBubbleCard(modifier: Modifier = Modifier) {
+    val bgColor      = MaterialTheme.colorScheme.surface
+    val borderColor  = MaterialTheme.colorScheme.outlineVariant
+    val textColor    = MaterialTheme.colorScheme.onSurface
+    val bodyColor    = MaterialTheme.colorScheme.onSurfaceVariant
+    val accentColor  = MaterialTheme.colorScheme.primary
+    val tipWidthDp   = 18.dp
+    val tipHeightDp  = 14.dp
+    val strokeWidthDp = 1.5.dp
+
+    Box(modifier = modifier) {
         Box(
             modifier = Modifier
-                .size(110.dp)
-                .clip(CircleShape)
-                .background(
-                    brush = Brush.radialGradient(
-                        colors = listOf(
-                            BrandPurple.copy(alpha = 0.18f),
-                            BrandPurple.copy(alpha = 0.04f),
-                        )
+                .fillMaxWidth()
+                .padding(end = tipWidthDp)
+                .drawBehind {
+                    val r    = 20.dp.toPx()
+                    val w    = size.width
+                    val h    = size.height
+                    val tipW = tipWidthDp.toPx()
+                    val tipH = tipHeightDp.toPx()
+                    val midY = h * 0.42f
+                    val strokeW = strokeWidthDp.toPx()
+
+                    val path = Path().apply {
+                        moveTo(r, 0f)
+                        lineTo(w - r, 0f)
+                        cubicTo(w, 0f, w, 0f, w, r)           // ← esquina sup-der
+                        lineTo(w, midY - tipH / 2f)
+                        lineTo(w + tipW, midY)                 // punta del piquito
+                        lineTo(w, midY + tipH / 2f)
+                        lineTo(w, h - r)
+                        cubicTo(w, h, w, h, w - r, h)         // ← esquina inf-der
+                        lineTo(r, h)
+                        cubicTo(0f, h, 0f, h, 0f, h - r)      // ← esquina inf-izq
+                        lineTo(0f, r)
+                        cubicTo(0f, 0f, 0f, 0f, r, 0f)        // ← esquina sup-izq
+                        close()
+                    }
+                    // Relleno
+                    drawPath(path, color = bgColor)
+                    // Contorno — evita que la tarjeta se camufle con el fondo
+                    // cuando ambos son claros (o ambos oscuros) en el tema activo.
+                    drawPath(
+                        path = path,
+                        color = borderColor,
+                        style = androidx.compose.ui.graphics.drawscope.Stroke(width = strokeW)
                     )
+                }
+        ) {
+            Column(
+                modifier = Modifier.padding(
+                    start  = 20.dp,
+                    top    = 20.dp,
+                    end    = 16.dp,
+                    bottom = 20.dp,
+                ),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Text(
+                    text       = "¡Bienvenido! 👋",
+                    fontSize   = 16.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color      = textColor,
                 )
-        )
-        // NOTA: reemplazar con Image(painter = painterResource(...))
-        //       cuando tengas el recurso del avatar 3D
-        Text(text = "🧑", fontSize = 80.sp)
+                Text(
+                    text       = "Comunicación sin barreras con Lengua de Señas Mexicana.",
+                    fontSize   = 12.sp,
+                    color      = bodyColor,
+                    lineHeight = 18.sp,
+                )
+                Icon(
+                    imageVector        = Icons.Outlined.FavoriteBorder,
+                    contentDescription = null,
+                    tint               = accentColor,
+                    modifier           = Modifier.size(22.dp),
+                )
+            }
+        }
     }
 }
 
@@ -279,7 +326,7 @@ private fun MenuCard(
             .fillMaxWidth()
             .clickable { onClick() },
         shape     = RoundedCornerShape(16.dp),
-        colors    = CardDefaults.cardColors(containerColor = NavBarBg),
+        colors    = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Row(
@@ -291,12 +338,17 @@ private fun MenuCard(
         ) {
             Box(
                 modifier         = Modifier
-                    .size(50.dp)
+                    .size(52.dp)
                     .clip(RoundedCornerShape(14.dp))
-                    .background(option.iconBg),
+                    .background(option.iconColor.copy(alpha = 0.14f)),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(text = option.icon, fontSize = 24.sp)
+                Icon(
+                    imageVector        = option.icon,
+                    contentDescription = option.title,
+                    tint               = option.iconColor,
+                    modifier           = Modifier.size(28.dp),
+                )
             }
 
             Column(modifier = Modifier.weight(1f)) {
@@ -310,25 +362,17 @@ private fun MenuCard(
                 Text(
                     text       = option.subtitle,
                     fontSize   = 12.sp,
-                    color      = TextBody,
+                    color      = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 17.sp,
                 )
             }
 
-            Box(
-                modifier         = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .background(option.iconBg),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text       = "›",
-                    fontSize   = 20.sp,
-                    color      = option.iconColor,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
+            Icon(
+                imageVector        = Icons.Outlined.ChevronRight,
+                contentDescription = "Ir",
+                tint               = option.iconColor,
+                modifier           = Modifier.size(22.dp),
+            )
         }
     }
 }

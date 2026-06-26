@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="SignTranslate" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Puedes añadir personalizaciones aquí si es necesario -->
+    </style>
+</resources>
