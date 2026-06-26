@@ -1,6 +1,4 @@
-
 package com.example.signtranslate.ui.screens
-
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -34,10 +32,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.signtranslate.viewmodel.AuthService
 
-// ── Paleta de colores ────────────────────────────────────────────────────────
 val LavenderBg    = Color(0xFFE8E0F7)
-val PurpleGradTop = Color(0xFF7B5EA7)
 val PurpleGradBot = Color(0xFF4A3080)
+val PurpleGradTop  = Color(0xFF7B5EA7)
 val PurpleAccent  = Color(0xFF6650A4)
 val TealLogo      = Color(0xFF3ABFBF)
 val TextGray      = Color(0xFF888888)
@@ -77,7 +74,7 @@ fun LoginView(onLoginExitoso: () -> Unit) {
         ) {
             Spacer(Modifier.height(48.dp))
 
-            // ── Logo ─────────────────────────────────────────────────────
+
             Box(
                 modifier = Modifier
                     .size(100.dp)
@@ -85,12 +82,7 @@ fun LoginView(onLoginExitoso: () -> Unit) {
                     .background(Color.White.copy(alpha = 0.15f)),
                 contentAlignment = Alignment.Center
             ) {
-                // TODO: reemplaza con tu Image() cuando tengas el logo:
-                // Image(
-                //     painter = painterResource(id = R.drawable.logo_signtranslate),
-                //     contentDescription = "Logo",
-                //     modifier = Modifier.size(80.dp)
-                // )
+
                 Text("🤟", fontSize = 46.sp)
             }
 
@@ -111,7 +103,6 @@ fun LoginView(onLoginExitoso: () -> Unit) {
 
             Spacer(Modifier.height(32.dp))
 
-            // ── Tarjeta principal ─────────────────────────────────────────
             Card(
                 shape = RoundedCornerShape(28.dp),
                 colors = CardDefaults.cardColors(containerColor = LavenderBg),
@@ -144,7 +135,6 @@ fun LoginView(onLoginExitoso: () -> Unit) {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // ── Tabs ──────────────────────────────────────────────
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceEvenly
@@ -178,7 +168,7 @@ fun LoginView(onLoginExitoso: () -> Unit) {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // ── Campo Email ───────────────────────────────────────
+
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it; error = false },
@@ -203,7 +193,7 @@ fun LoginView(onLoginExitoso: () -> Unit) {
 
                     Spacer(Modifier.height(12.dp))
 
-                    // ── Campo Contraseña ──────────────────────────────────
+
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it; error = false },
@@ -238,7 +228,7 @@ fun LoginView(onLoginExitoso: () -> Unit) {
                         )
                     )
 
-                    // ── Mensaje de error (oculto por defecto) ─────────────
+
                     AnimatedVisibility(
                         visible = error,
                         enter = fadeIn(),
@@ -256,7 +246,7 @@ fun LoginView(onLoginExitoso: () -> Unit) {
 
                     Spacer(Modifier.height(12.dp))
 
-                    // ── Recordarme + ¿Olvidaste? ──────────────────────────
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
@@ -286,7 +276,7 @@ fun LoginView(onLoginExitoso: () -> Unit) {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // ── Botón principal ───────────────────────────────────
+
                     Button(
                         onClick = {
                             if (selectedTab == 0) {
@@ -325,7 +315,7 @@ fun LoginView(onLoginExitoso: () -> Unit) {
 
                     Spacer(Modifier.height(16.dp))
 
-                    // ── Botón Google ──────────────────────────────────────
+
                     OutlinedButton(
                         onClick = { /* TODO: Google Sign-In */ },
                         modifier = Modifier

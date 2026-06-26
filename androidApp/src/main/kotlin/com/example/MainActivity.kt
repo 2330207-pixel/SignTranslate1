@@ -59,9 +59,6 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-            // ─────────────────────────────────────────────────────
-            // Permisos
-            // ─────────────────────────────────────────────────────
 
             val permissionLauncher =
                 rememberLauncherForActivityResult(
@@ -77,9 +74,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            // ─────────────────────────────────────────────────────
-            // Dark Mode → barras del sistema
-            // ─────────────────────────────────────────────────────
 
             val settings by settingsViewModel
                 .uiState
@@ -116,9 +110,6 @@ class MainActivity : ComponentActivity() {
                     }
             }
 
-            // ─────────────────────────────────────────────────────
-            // App
-            // ─────────────────────────────────────────────────────
 
             App(
                 authViewModel = authViewModel,
