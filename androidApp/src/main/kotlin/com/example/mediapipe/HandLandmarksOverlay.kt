@@ -10,13 +10,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import com.example.signtranslate.data.translator.HandDetectionResult
 
-/**
- * Overlay de landmarks de MediaPipe.
- *
- * showHandPoints:
- *   Se conecta a SettingsViewModel.
- *   Si es false no se dibuja nada.
- */
+
 @Composable
 fun HandLandmarksOverlay(
     detections: List<HandDetectionResult>,
@@ -34,26 +28,23 @@ fun HandLandmarksOverlay(
     }
 }
 
-/**
- * Conexiones estándar de MediaPipe Hand Landmarker.
- */
 private val HAND_CONNECTIONS = listOf(
-    // Pulgar
+
     0 to 1, 1 to 2, 2 to 3, 3 to 4,
 
-    // Índice
+
     0 to 5, 5 to 6, 6 to 7, 7 to 8,
 
-    // Medio
+
     0 to 9, 9 to 10, 10 to 11, 11 to 12,
 
-    // Anular
+
     0 to 13, 13 to 14, 14 to 15, 15 to 16,
 
-    // Meñique
+
     0 to 17, 17 to 18, 18 to 19, 19 to 20,
 
-    // Palma
+
     5 to 9,
     9 to 13,
     13 to 17
@@ -103,14 +94,12 @@ private fun drawHandLandmarks(
             lm.y * scope.size.height
         )
 
-        // Anillo exterior
         scope.drawCircle(
             color = Color.White,
             radius = 8f,
             center = center
         )
 
-        // Punto interior
         scope.drawCircle(
             color = Color(0xFF00E676),
             radius = 5f,

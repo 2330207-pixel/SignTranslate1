@@ -61,7 +61,6 @@ class HandLandmarkerHelper(
             
             val frameTime = SystemClock.uptimeMillis()
 
-            // Usar el método oficial de CameraX para obtener el Bitmap
             val bitmap = try {
                 proxy.toBitmap()
             } catch (e: Exception) {

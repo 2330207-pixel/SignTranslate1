@@ -18,14 +18,10 @@ class TextToSpeechManager(
     private val scope: CoroutineScope
 ) {
 
-    // ─────────────────────────────────────────────────────────
-    // Estado observable
-    // ─────────────────────────────────────────────────────────
 
     private val _isSpeaking = MutableStateFlow(false)
     val isSpeaking: StateFlow<Boolean> = _isSpeaking
 
-    // ─────────────────────────────────────────────────────────
 
     private var tts: TextToSpeech? = null
 
@@ -50,9 +46,6 @@ class TextToSpeechManager(
         }
     }
 
-    // ─────────────────────────────────────────────────────────
-    // Observa preferencias
-    // ─────────────────────────────────────────────────────────
 
     private fun observePreferences() {
 
@@ -73,9 +66,6 @@ class TextToSpeechManager(
         }
     }
 
-    // ─────────────────────────────────────────────────────────
-    // Listener de reproducción
-    // ─────────────────────────────────────────────────────────
 
     private fun setupUtteranceListener() {
 
@@ -97,9 +87,6 @@ class TextToSpeechManager(
         )
     }
 
-    // ─────────────────────────────────────────────────────────
-    // Hablar
-    // ─────────────────────────────────────────────────────────
 
     fun speak(text: String) {
 
@@ -122,7 +109,6 @@ class TextToSpeechManager(
         )
     }
 
-    // ─────────────────────────────────────────────────────────
 
     fun stop() {
 
@@ -131,7 +117,6 @@ class TextToSpeechManager(
         _isSpeaking.value = false
     }
 
-    // ─────────────────────────────────────────────────────────
 
     fun shutdown() {
 

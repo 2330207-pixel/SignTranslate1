@@ -116,7 +116,6 @@ fun LoginView(onLoginExitoso: () -> Unit) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    // Título
                     Text(
                         text = if (selectedTab == 0) "Iniciar sesion" else "Registrarse",
                         fontSize = 24.sp,
@@ -303,7 +302,6 @@ fun LoginView(onLoginExitoso: () -> Unit) {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // ── Divisor ───────────────────────────────────────────
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
@@ -339,7 +337,6 @@ fun LoginView(onLoginExitoso: () -> Unit) {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // ── ¿No tienes cuenta? ────────────────────────────────
                     Text(
                         text = buildAnnotatedString {
                             withStyle(SpanStyle(color = TextGray, fontSize = 13.sp)) {

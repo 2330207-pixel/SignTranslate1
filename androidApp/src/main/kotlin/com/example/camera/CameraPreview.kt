@@ -8,10 +8,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 
-/**
- * AndroidView wrapper for CameraX PreviewView.
- * Inject this into SignToTextTab via the cameraPreviewContent lambda.
- */
+
 @Composable
 fun CameraPreview(
     cameraManager: CameraManager,

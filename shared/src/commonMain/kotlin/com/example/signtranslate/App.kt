@@ -18,16 +18,6 @@ import com.example.signtranslate.viewmodel.SettingsViewModel
 import com.example.signtranslate.viewmodel.avatar.AvatarViewModel
 import com.example.signtranslate.viewmodel.translator.TranslatorViewModel
 
-/**
- * Raíz de la aplicación.
- *
- * El tema se actualiza automáticamente cuando cambian:
- * - darkMode
- * - highContrast
- * - largeText
- *
- * mediante SettingsViewModel + DataStore.
- */
 @Composable
 fun App(
     authViewModel: AuthViewModel,

@@ -26,9 +26,6 @@ class CameraManager(
     private var previewView: PreviewView? = null
     private var isPendingStart = false
 
-    // ─────────────────────────────────────────────────────────
-    // Estados observables
-    // ─────────────────────────────────────────────────────────
 
     private val _isCameraActive = MutableStateFlow(false)
     val isCameraActive: StateFlow<Boolean> = _isCameraActive
@@ -36,7 +33,6 @@ class CameraManager(
     private val _isFrontCamera = MutableStateFlow(false)
     val isFrontCamera: StateFlow<Boolean> = _isFrontCamera
 
-    // ─────────────────────────────────────────────────────────
 
     private var cameraProvider: ProcessCameraProvider? = null
     private val cameraExecutor: ExecutorService =
@@ -44,7 +40,6 @@ class CameraManager(
 
     private var currentResolution = "720p"
 
-    // ─────────────────────────────────────────────────────────
 
     fun initialize(lifecycleOwner: LifecycleOwner, previewView: PreviewView) {
         this.lifecycleOwner = lifecycleOwner
@@ -132,16 +127,12 @@ class CameraManager(
         }, ContextCompat.getMainExecutor(context))
     }
 
-    // ─────────────────────────────────────────────────────────
-    // Cámara frontal / trasera
-    // ─────────────────────────────────────────────────────────
 
     fun flipCamera() {
         _isFrontCamera.value = !_isFrontCamera.value
         bindCamera()
     }
 
-    // ─────────────────────────────────────────────────────────
 
     fun stopCamera() {
         isPendingStart = false
@@ -154,9 +145,6 @@ class CameraManager(
         cameraExecutor.shutdown()
     }
 
-    // ─────────────────────────────────────────────────────────
-    // Resoluciones
-    // ─────────────────────────────────────────────────────────
 
     private fun resolutionToSize(
         resolution: String
