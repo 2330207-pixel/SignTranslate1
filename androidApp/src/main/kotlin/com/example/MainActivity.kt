@@ -1,5 +1,4 @@
 package com.example.signtranslate
-
 import android.Manifest
 import android.os.Bundle
 import android.view.ViewGroup
@@ -9,13 +8,20 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.example.notifications.NotificationHelper
@@ -60,8 +66,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-            // Instancia del helper de notificaciones. Vive aquí porque
-            // MainActivity sí puede usar código exclusivo de Android.
+            // Instancia del helper de notificaciones.
             val notificationHelper =
                 remember { NotificationHelper(context) }
 
@@ -80,16 +85,11 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            // ── Vigilancia del estado de autenticación ──────────────────────
-            // AuthViewModel no puede llamar directamente a NotificationHelper
-            // (viven en módulos distintos), así que MainActivity "observa"
-            // los cambios en su uiState y dispara la notificación correcta.
             val authUiState by authViewModel.uiState.collectAsState()
 
             LaunchedEffect(authUiState.successMessage) {
                 if (authUiState.successMessage.isNotEmpty()) {
                     if (authUiState.successMessage.contains("Bienvenido")) {
-                        // Coincide con el mensaje de registro exitoso
                         notificationHelper.notifyRegisterSuccess()
                     }
                 }
@@ -97,12 +97,9 @@ class MainActivity : ComponentActivity() {
 
             LaunchedEffect(authUiState.errorMessage) {
                 if (authUiState.errorMessage.isNotEmpty()) {
-                    // Cualquier error de login o registro se trata como
-                    // error de conexión con el backend.
                     notificationHelper.notifyConnectionError()
                 }
             }
-
 
             val settings by settingsViewModel
                 .uiState
@@ -188,6 +185,55 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             )
+
+            var showTestPanel by remember { mutableStateOf(true) }
+
+            if (showTestPanel) {
+                Dialog(onDismissRequest = { showTestPanel = false }) {
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("Panel de prueba — Notificaciones")
+
+                        Button(
+                            modifier = Modifier.padding(top = 8.dp),
+                            onClick = { notificationHelper.notifySessionExpired() }
+                        ) {
+                            Text("Sesión expirada")
+                        }
+
+                        Button(
+                            modifier = Modifier.padding(top = 8.dp),
+                            onClick = { notificationHelper.notifyTranslationReady() }
+                        ) {
+                            Text("Traducción lista")
+                        }
+
+                        Button(
+                            modifier = Modifier.padding(top = 8.dp),
+                            onClick = { notificationHelper.notifyConnectionError() }
+                        ) {
+                            Text("Error de conexión")
+                        }
+
+                        Button(
+                            modifier = Modifier.padding(top = 8.dp),
+                            onClick = { notificationHelper.notifyRegisterSuccess() }
+                        ) {
+                            Text("Registro exitoso")
+                        }
+
+                        Button(
+                            modifier = Modifier.padding(top = 16.dp),
+                            onClick = { showTestPanel = false }
+                        ) {
+                            Text("Cerrar panel")
+                        }
+                    }
+                }
+            }
         }
     }
 }

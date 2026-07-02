@@ -1,5 +1,4 @@
 package com.example.notifications
-
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -8,12 +7,9 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.signtranslate.R
 
-// Clase encargada de crear y mostrar notificaciones locales
-// relacionadas con distintos eventos de la aplicación SignTranslate.
 class NotificationHelper(private val context: Context) {
 
     companion object {
-        // Un solo canal para todas las notificaciones de la app.
         private const val CHANNEL_ID = "signtranslate_channel"
 
         // Cada tipo de notificación necesita un ID distinto,
@@ -43,7 +39,6 @@ class NotificationHelper(private val context: Context) {
         }
     }
 
-    // Función interna reutilizable: arma y muestra la notificación.
     private fun showNotification(id: Int, title: String, message: String) {
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
