@@ -54,7 +54,7 @@ sealed class AuthResult<out T> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// AUTH SERVICE — consume el endpoint real del backend
+// AUTH SERVICE — consume el endpoint local
 // ─────────────────────────────────────────────────────────────────────────────
 
 class AuthService {
@@ -81,23 +81,14 @@ class AuthService {
         email:    String,
         password: String
     ): AuthResult<AuthResponse> {
-        return try {
-            val response = client.post("$BASE_URL/register") {
-                contentType(ContentType.Application.Json)
-                setBody(RegisterRequest(name, email, password))
-            }
-
-            if (response.status.isSuccess()) {
-                AuthResult.Success(response.body<AuthResponse>())
-            } else {
-                // El backend respondió pero con error (ej. correo ya registrado)
-                val error = response.body<ErrorResponse>()
-                AuthResult.Error(error.error)
-            }
-        } catch (e: Exception) {
-            // No se pudo ni siquiera contactar al servidor (sin red, servidor apagado, etc.)
-            AuthResult.Error("No se pudo conectar al servidor: ${e.message}")
-        }
+        // Simulación temporal (sin conexión al servidor)
+        return AuthResult.Success(
+            AuthResponse(
+                message = "Registro exitoso (Simulado)",
+                token   = "fake_token_123",
+                user    = User("1", name, email, "2024-01-01")
+            )
+        )
     }
 
     // ── Login ─────────────────────────────────────────────────────────────────
@@ -105,38 +96,21 @@ class AuthService {
         email:    String,
         password: String
     ): AuthResult<AuthResponse> {
-        return try {
-            val response = client.post("$BASE_URL/login") {
-                contentType(ContentType.Application.Json)
-                setBody(LoginRequest(email, password))
-            }
-
-            if (response.status.isSuccess()) {
-                AuthResult.Success(response.body<AuthResponse>())
-            } else {
-                // Credenciales incorrectas u otro error controlado por el backend
-                val error = response.body<ErrorResponse>()
-                AuthResult.Error(error.error)
-            }
-        } catch (e: Exception) {
-            AuthResult.Error("No se pudo conectar al servidor: ${e.message}")
-        }
+        // Simulación temporal (sin conexión al servidor)
+        return AuthResult.Success(
+            AuthResponse(
+                message = "Login exitoso (Simulado)",
+                token   = "fake_token_123",
+                user    = User("1", "Usuario de Prueba", email, "2024-01-01")
+            )
+        )
     }
 
     // ── Obtener perfil ────────────────────────────────────────────────────────
     suspend fun getProfile(token: String): AuthResult<User> {
-        return try {
-            val response = client.get("$BASE_URL/profile") {
-                header(HttpHeaders.Authorization, "Bearer $token")
-            }
-
-            if (response.status.isSuccess()) {
-                AuthResult.Success(response.body<User>())
-            } else {
-                AuthResult.Error("Token inválido o expirado")
-            }
-        } catch (e: Exception) {
-            AuthResult.Error("No se pudo conectar al servidor: ${e.message}")
-        }
+        // Simulación temporal (sin conexión al servidor)
+        return AuthResult.Success(
+            User("1", "Usuario Recuperado", "user@example.com", "2024-01-01")
+        )
     }
 }
