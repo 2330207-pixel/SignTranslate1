@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.example.notifications.NotificationHelper
 import com.example.signtranslate.mediapipe.HandLandmarksOverlay
 import com.example.signtranslate.data.UserPreferences
 import com.example.signtranslate.data.createDataStore
@@ -59,6 +60,10 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
+            // Instancia del helper de notificaciones. Vive aquí porque
+            // MainActivity sí puede usar código exclusivo de Android.
+            val notificationHelper =
+                remember { NotificationHelper(context) }
 
             val permissionLauncher =
                 rememberLauncherForActivityResult(
@@ -69,9 +74,33 @@ class MainActivity : ComponentActivity() {
                 permissionLauncher.launch(
                     arrayOf(
                         Manifest.permission.CAMERA,
-                        Manifest.permission.RECORD_AUDIO
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.POST_NOTIFICATIONS
                     )
                 )
+            }
+
+            // ── Vigilancia del estado de autenticación ──────────────────────
+            // AuthViewModel no puede llamar directamente a NotificationHelper
+            // (viven en módulos distintos), así que MainActivity "observa"
+            // los cambios en su uiState y dispara la notificación correcta.
+            val authUiState by authViewModel.uiState.collectAsState()
+
+            LaunchedEffect(authUiState.successMessage) {
+                if (authUiState.successMessage.isNotEmpty()) {
+                    if (authUiState.successMessage.contains("Bienvenido")) {
+                        // Coincide con el mensaje de registro exitoso
+                        notificationHelper.notifyRegisterSuccess()
+                    }
+                }
+            }
+
+            LaunchedEffect(authUiState.errorMessage) {
+                if (authUiState.errorMessage.isNotEmpty()) {
+                    // Cualquier error de login o registro se trata como
+                    // error de conexión con el backend.
+                    notificationHelper.notifyConnectionError()
+                }
             }
 
 
